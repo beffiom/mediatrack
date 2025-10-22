@@ -2,3 +2,4 @@ config/master.key
 config/credentials/*.key
 .env*
 vendor/bundle/
+.fly/
