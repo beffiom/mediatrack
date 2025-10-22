@@ -1,8 +1,8 @@
 require "test_helper"
 
 class WebhooksControllerTest < ActionDispatch::IntegrationTest
-  test "should get stripe" do
-    get webhooks_stripe_url
+  test "webhook endpoint accepts post" do
+    post "/stripe/webhook", params: {}.to_json, headers: { "CONTENT_TYPE" => "application/json" }
     assert_response :success
   end
 end

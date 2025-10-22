@@ -1,0 +1,878 @@
+Missing env vars: TMDB_API_KEY, STRIPE_SECRET_KEY
+STRIPE_SECRET_KEY is not set; Stripe API calls will fail
+Missing env vars: TMDB_API_KEY, STRIPE_SECRET_KEY
+STRIPE_SECRET_KEY is not set; Stripe API calls will fail
+  [1m[35mSQL (0.0ms)[0m  [1m[35mSET search_path TO public[0m
+  [1m[35m (38.0ms)[0m  [1m[35mDROP DATABASE IF EXISTS "mediatrack_test"[0m
+  [1m[35m (31.9ms)[0m  [1m[35mCREATE DATABASE "mediatrack_test" ENCODING = 'unicode'[0m
+  [1m[35mSQL (9.2ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql" SCHEMA pg_catalog[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "media_items" CASCADE[0m
+  [1m[35m (2.5ms)[0m  [1m[35mCREATE TABLE "media_items" ("id" bigserial primary key, "created_at" timestamp(6) NOT NULL, "media_type" character varying, "overview" text, "poster_path" character varying, "release_date" date, "title" character varying, "tmdb_id" integer, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_media_items_on_tmdb_id" ON "media_items" ("tmdb_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "users" CASCADE[0m
+  [1m[35m (1.6ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "created_at" timestamp(6) NOT NULL, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "remember_created_at" timestamp(6), "reset_password_sent_at" timestamp(6), "reset_password_token" character varying, "stripe_customer_id" character varying, "subscription_status" character varying, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "watchlist_items" CASCADE[0m
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE TABLE "watchlist_items" ("id" bigserial primary key, "created_at" timestamp(6) NOT NULL, "media_item_id" bigint NOT NULL, "status" character varying DEFAULT 'planned' NOT NULL, "updated_at" timestamp(6) NOT NULL, "user_id" bigint NOT NULL, "watched_on" date)[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE INDEX "index_watchlist_items_on_media_item_id" ON "watchlist_items" ("media_item_id")[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_watchlist_items_on_user_id_and_media_item_id" ON "watchlist_items" ("user_id", "media_item_id")[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE INDEX "index_watchlist_items_on_user_id" ON "watchlist_items" ("user_id")[0m
+  [1m[35m (1.4ms)[0m  [1m[35mALTER TABLE "watchlist_items" ADD CONSTRAINT "fk_rails_dbd68e62e5"
+FOREIGN KEY ("media_item_id")
+  REFERENCES "media_items" ("id")
+[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "watchlist_items" ADD CONSTRAINT "fk_rails_077cf8f283"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.8ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20251022114725)[0m
+  [1m[35m (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20251022114716),
+(20251022114658),
+(20251022114638);[0m
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.7ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'test', '2025-10-22 20:54:24.236584', '2025-10-22 20:54:24.236586') RETURNING "key"[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.6ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('schema_sha1', '0a56c8116ee1dab7cb2075855fd6ba8b38f4962e', '2025-10-22 20:54:24.238334', '2025-10-22 20:54:24.238336') RETURNING "key"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Missing env vars: TMDB_API_KEY, STRIPE_SECRET_KEY
+STRIPE_SECRET_KEY is not set; Stripe API calls will fail
+  [1m[36mActiveRecord::InternalMetadata Load (0.7ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.4ms)[0m  [1m[35mALTER TABLE "media_items" DISABLE TRIGGER ALL;ALTER TABLE "watchlist_items" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK AND CHAIN[0m
+  [1m[36mFixtures Load (1.7ms)[0m  [1m[31mDELETE FROM "media_items";
+DELETE FROM "users";
+DELETE FROM "watchlist_items";
+INSERT INTO "media_items" ("id", "created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.753146', 'movie', 'sample overview', '/poster1.jpg', '2025-10-22', 'sample movie', 1, '2025-10-22 20:55:53.753146'), (298486374, '2025-10-22 20:55:53.753146', 'tv', 'sample overview', '/poster2.jpg', '2025-10-22', 'sample tv', 2, '2025-10-22 20:55:53.753146');
+INSERT INTO "users" ("id", "created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.756686', 'test1@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.756686'), (298486374, '2025-10-22 20:55:53.756686', 'test2@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.756686');
+INSERT INTO "watchlist_items" ("id", "created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES (980190962, '2025-10-22 20:55:53.758074', 980190962, 'planned', '2025-10-22 20:55:53.758074', 980190962, DEFAULT), (298486374, '2025-10-22 20:55:53.758074', 298486374, 'watched', '2025-10-22 20:55:53.758074', 298486374, DEFAULT)[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "media_items" ENABLE TRIGGER ALL;ALTER TABLE "watchlist_items" ENABLE TRIGGER ALL;ALTER TABLE "users" ENABLE TRIGGER ALL;ALTER TABLE "schema_migrations" ENABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" ENABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (4.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (2.0ms)[0m  [1m[35mdo $$
+  declare r record;
+BEGIN
+FOR r IN (
+  SELECT FORMAT(
+    'UPDATE pg_catalog.pg_constraint SET convalidated=false WHERE conname = ''%1$I'' AND connamespace::regnamespace = ''%2$I''::regnamespace; ALTER TABLE %2$I.%3$I VALIDATE CONSTRAINT %1$I;',
+    constraint_name,
+    table_schema,
+    table_name
+  ) AS constraint_check
+  FROM information_schema.table_constraints WHERE constraint_type = 'FOREIGN KEY'
+)
+  LOOP
+    EXECUTE (r.constraint_check);
+  END LOOP;
+END;
+$$;
+[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "media_items" DISABLE TRIGGER ALL;ALTER TABLE "watchlist_items" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK AND CHAIN[0m
+  [1m[36mFixtures Load (0.4ms)[0m  [1m[31mDELETE FROM "media_items";
+DELETE FROM "users";
+DELETE FROM "watchlist_items";
+INSERT INTO "media_items" ("id", "created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.788534', 'movie', 'sample overview', '/poster1.jpg', '2025-10-22', 'sample movie', 1, '2025-10-22 20:55:53.788534'), (298486374, '2025-10-22 20:55:53.788534', 'tv', 'sample overview', '/poster2.jpg', '2025-10-22', 'sample tv', 2, '2025-10-22 20:55:53.788534');
+INSERT INTO "users" ("id", "created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.788630', 'test1@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.788630'), (298486374, '2025-10-22 20:55:53.788630', 'test2@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.788630');
+INSERT INTO "watchlist_items" ("id", "created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES (980190962, '2025-10-22 20:55:53.788664', 980190962, 'planned', '2025-10-22 20:55:53.788664', 980190962, DEFAULT), (298486374, '2025-10-22 20:55:53.788664', 298486374, 'watched', '2025-10-22 20:55:53.788664', 298486374, DEFAULT)[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "media_items" DISABLE TRIGGER ALL;ALTER TABLE "watchlist_items" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK AND CHAIN[0m
+  [1m[36mFixtures Load (0.3ms)[0m  [1m[31mDELETE FROM "media_items";
+DELETE FROM "users";
+DELETE FROM "watchlist_items";
+INSERT INTO "media_items" ("id", "created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.793873', 'movie', 'sample overview', '/poster1.jpg', '2025-10-22', 'sample movie', 1, '2025-10-22 20:55:53.793873'), (298486374, '2025-10-22 20:55:53.793873', 'tv', 'sample overview', '/poster2.jpg', '2025-10-22', 'sample tv', 2, '2025-10-22 20:55:53.793873');
+INSERT INTO "users" ("id", "created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.793949', 'test1@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.793949'), (298486374, '2025-10-22 20:55:53.793949', 'test2@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.793949');
+INSERT INTO "watchlist_items" ("id", "created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES (980190962, '2025-10-22 20:55:53.793981', 980190962, 'planned', '2025-10-22 20:55:53.793981', 980190962, DEFAULT), (298486374, '2025-10-22 20:55:53.793981', 298486374, 'watched', '2025-10-22 20:55:53.793981', 298486374, DEFAULT)[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "media_items" DISABLE TRIGGER ALL;ALTER TABLE "watchlist_items" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK AND CHAIN[0m
+  [1m[36mFixtures Load (0.3ms)[0m  [1m[31mDELETE FROM "media_items";
+DELETE FROM "users";
+DELETE FROM "watchlist_items";
+INSERT INTO "media_items" ("id", "created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.796981', 'movie', 'sample overview', '/poster1.jpg', '2025-10-22', 'sample movie', 1, '2025-10-22 20:55:53.796981'), (298486374, '2025-10-22 20:55:53.796981', 'tv', 'sample overview', '/poster2.jpg', '2025-10-22', 'sample tv', 2, '2025-10-22 20:55:53.796981');
+INSERT INTO "users" ("id", "created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.797037', 'test1@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.797037'), (298486374, '2025-10-22 20:55:53.797037', 'test2@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.797037');
+INSERT INTO "watchlist_items" ("id", "created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES (980190962, '2025-10-22 20:55:53.797064', 980190962, 'planned', '2025-10-22 20:55:53.797064', 980190962, DEFAULT), (298486374, '2025-10-22 20:55:53.797064', 298486374, 'watched', '2025-10-22 20:55:53.797064', 298486374, DEFAULT)[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "media_items" DISABLE TRIGGER ALL;ALTER TABLE "watchlist_items" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK AND CHAIN[0m
+  [1m[36mFixtures Load (0.3ms)[0m  [1m[31mDELETE FROM "media_items";
+DELETE FROM "users";
+DELETE FROM "watchlist_items";
+INSERT INTO "media_items" ("id", "created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.800298', 'movie', 'sample overview', '/poster1.jpg', '2025-10-22', 'sample movie', 1, '2025-10-22 20:55:53.800298'), (298486374, '2025-10-22 20:55:53.800298', 'tv', 'sample overview', '/poster2.jpg', '2025-10-22', 'sample tv', 2, '2025-10-22 20:55:53.800298');
+INSERT INTO "users" ("id", "created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.800347', 'test1@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.800347'), (298486374, '2025-10-22 20:55:53.800347', 'test2@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.800347');
+INSERT INTO "watchlist_items" ("id", "created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES (980190962, '2025-10-22 20:55:53.800372', 980190962, 'planned', '2025-10-22 20:55:53.800372', 980190962, DEFAULT), (298486374, '2025-10-22 20:55:53.800372', 298486374, 'watched', '2025-10-22 20:55:53.800372', 298486374, DEFAULT)[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "media_items" DISABLE TRIGGER ALL;ALTER TABLE "watchlist_items" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK AND CHAIN[0m
+  [1m[36mFixtures Load (0.3ms)[0m  [1m[31mDELETE FROM "media_items";
+DELETE FROM "users";
+DELETE FROM "watchlist_items";
+INSERT INTO "media_items" ("id", "created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.803258', 'movie', 'sample overview', '/poster1.jpg', '2025-10-22', 'sample movie', 1, '2025-10-22 20:55:53.803258'), (298486374, '2025-10-22 20:55:53.803258', 'tv', 'sample overview', '/poster2.jpg', '2025-10-22', 'sample tv', 2, '2025-10-22 20:55:53.803258');
+INSERT INTO "users" ("id", "created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.803304', 'test1@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.803304'), (298486374, '2025-10-22 20:55:53.803304', 'test2@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.803304');
+INSERT INTO "watchlist_items" ("id", "created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES (980190962, '2025-10-22 20:55:53.803330', 980190962, 'planned', '2025-10-22 20:55:53.803330', 980190962, DEFAULT), (298486374, '2025-10-22 20:55:53.803330', 298486374, 'watched', '2025-10-22 20:55:53.803330', 298486374, DEFAULT)[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "media_items" DISABLE TRIGGER ALL;ALTER TABLE "watchlist_items" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK AND CHAIN[0m
+  [1m[36mFixtures Load (0.2ms)[0m  [1m[31mDELETE FROM "media_items";
+DELETE FROM "users";
+DELETE FROM "watchlist_items";
+INSERT INTO "media_items" ("id", "created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.806451', 'movie', 'sample overview', '/poster1.jpg', '2025-10-22', 'sample movie', 1, '2025-10-22 20:55:53.806451'), (298486374, '2025-10-22 20:55:53.806451', 'tv', 'sample overview', '/poster2.jpg', '2025-10-22', 'sample tv', 2, '2025-10-22 20:55:53.806451');
+INSERT INTO "users" ("id", "created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.806507', 'test1@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.806507'), (298486374, '2025-10-22 20:55:53.806507', 'test2@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.806507');
+INSERT INTO "watchlist_items" ("id", "created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES (980190962, '2025-10-22 20:55:53.806533', 980190962, 'planned', '2025-10-22 20:55:53.806533', 980190962, DEFAULT), (298486374, '2025-10-22 20:55:53.806533', 298486374, 'watched', '2025-10-22 20:55:53.806533', 298486374, DEFAULT)[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "media_items" DISABLE TRIGGER ALL;ALTER TABLE "watchlist_items" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK AND CHAIN[0m
+  [1m[36mFixtures Load (0.3ms)[0m  [1m[31mDELETE FROM "media_items";
+DELETE FROM "users";
+DELETE FROM "watchlist_items";
+INSERT INTO "media_items" ("id", "created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.809150', 'movie', 'sample overview', '/poster1.jpg', '2025-10-22', 'sample movie', 1, '2025-10-22 20:55:53.809150'), (298486374, '2025-10-22 20:55:53.809150', 'tv', 'sample overview', '/poster2.jpg', '2025-10-22', 'sample tv', 2, '2025-10-22 20:55:53.809150');
+INSERT INTO "users" ("id", "created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.809197', 'test1@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.809197'), (298486374, '2025-10-22 20:55:53.809197', 'test2@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.809197');
+INSERT INTO "watchlist_items" ("id", "created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES (980190962, '2025-10-22 20:55:53.809223', 980190962, 'planned', '2025-10-22 20:55:53.809223', 980190962, DEFAULT), (298486374, '2025-10-22 20:55:53.809223', 298486374, 'watched', '2025-10-22 20:55:53.809223', 298486374, DEFAULT)[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "media_items" DISABLE TRIGGER ALL;ALTER TABLE "watchlist_items" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK AND CHAIN[0m
+  [1m[36mFixtures Load (0.2ms)[0m  [1m[31mDELETE FROM "media_items";
+DELETE FROM "users";
+DELETE FROM "watchlist_items";
+INSERT INTO "media_items" ("id", "created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.812322', 'movie', 'sample overview', '/poster1.jpg', '2025-10-22', 'sample movie', 1, '2025-10-22 20:55:53.812322'), (298486374, '2025-10-22 20:55:53.812322', 'tv', 'sample overview', '/poster2.jpg', '2025-10-22', 'sample tv', 2, '2025-10-22 20:55:53.812322');
+INSERT INTO "users" ("id", "created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.812372', 'test1@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.812372'), (298486374, '2025-10-22 20:55:53.812372', 'test2@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.812372');
+INSERT INTO "watchlist_items" ("id", "created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES (980190962, '2025-10-22 20:55:53.812399', 980190962, 'planned', '2025-10-22 20:55:53.812399', 980190962, DEFAULT), (298486374, '2025-10-22 20:55:53.812399', 298486374, 'watched', '2025-10-22 20:55:53.812399', 298486374, DEFAULT)[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mALTER TABLE "media_items" DISABLE TRIGGER ALL;ALTER TABLE "watchlist_items" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK AND CHAIN[0m
+  [1m[36mFixtures Load (0.2ms)[0m  [1m[31mDELETE FROM "media_items";
+DELETE FROM "users";
+DELETE FROM "watchlist_items";
+INSERT INTO "media_items" ("id", "created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.815264', 'movie', 'sample overview', '/poster1.jpg', '2025-10-22', 'sample movie', 1, '2025-10-22 20:55:53.815264'), (298486374, '2025-10-22 20:55:53.815264', 'tv', 'sample overview', '/poster2.jpg', '2025-10-22', 'sample tv', 2, '2025-10-22 20:55:53.815264');
+INSERT INTO "users" ("id", "created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.815309', 'test1@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.815309'), (298486374, '2025-10-22 20:55:53.815309', 'test2@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.815309');
+INSERT INTO "watchlist_items" ("id", "created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES (980190962, '2025-10-22 20:55:53.815334', 980190962, 'planned', '2025-10-22 20:55:53.815334', 980190962, DEFAULT), (298486374, '2025-10-22 20:55:53.815334', 298486374, 'watched', '2025-10-22 20:55:53.815334', 298486374, DEFAULT)[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "media_items" DISABLE TRIGGER ALL;ALTER TABLE "watchlist_items" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK AND CHAIN[0m
+  [1m[36mFixtures Load (0.2ms)[0m  [1m[31mDELETE FROM "media_items";
+DELETE FROM "users";
+DELETE FROM "watchlist_items";
+INSERT INTO "media_items" ("id", "created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.818081', 'movie', 'sample overview', '/poster1.jpg', '2025-10-22', 'sample movie', 1, '2025-10-22 20:55:53.818081'), (298486374, '2025-10-22 20:55:53.818081', 'tv', 'sample overview', '/poster2.jpg', '2025-10-22', 'sample tv', 2, '2025-10-22 20:55:53.818081');
+INSERT INTO "users" ("id", "created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.818126', 'test1@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.818126'), (298486374, '2025-10-22 20:55:53.818126', 'test2@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.818126');
+INSERT INTO "watchlist_items" ("id", "created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES (980190962, '2025-10-22 20:55:53.818151', 980190962, 'planned', '2025-10-22 20:55:53.818151', 980190962, DEFAULT), (298486374, '2025-10-22 20:55:53.818151', 298486374, 'watched', '2025-10-22 20:55:53.818151', 298486374, DEFAULT)[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.1ms)[0m  [1m[35mALTER TABLE "media_items" DISABLE TRIGGER ALL;ALTER TABLE "watchlist_items" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK AND CHAIN[0m
+  [1m[36mFixtures Load (0.2ms)[0m  [1m[31mDELETE FROM "media_items";
+DELETE FROM "users";
+DELETE FROM "watchlist_items";
+INSERT INTO "media_items" ("id", "created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.821119', 'movie', 'sample overview', '/poster1.jpg', '2025-10-22', 'sample movie', 1, '2025-10-22 20:55:53.821119'), (298486374, '2025-10-22 20:55:53.821119', 'tv', 'sample overview', '/poster2.jpg', '2025-10-22', 'sample tv', 2, '2025-10-22 20:55:53.821119');
+INSERT INTO "users" ("id", "created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.821165', 'test1@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.821165'), (298486374, '2025-10-22 20:55:53.821165', 'test2@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.821165');
+INSERT INTO "watchlist_items" ("id", "created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES (980190962, '2025-10-22 20:55:53.821190', 980190962, 'planned', '2025-10-22 20:55:53.821190', 980190962, DEFAULT), (298486374, '2025-10-22 20:55:53.821190', 298486374, 'watched', '2025-10-22 20:55:53.821190', 298486374, DEFAULT)[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "media_items" DISABLE TRIGGER ALL;ALTER TABLE "watchlist_items" DISABLE TRIGGER ALL;ALTER TABLE "users" DISABLE TRIGGER ALL;ALTER TABLE "schema_migrations" DISABLE TRIGGER ALL;ALTER TABLE "ar_internal_metadata" DISABLE TRIGGER ALL[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK AND CHAIN[0m
+  [1m[36mFixtures Load (0.2ms)[0m  [1m[31mDELETE FROM "media_items";
+DELETE FROM "users";
+DELETE FROM "watchlist_items";
+INSERT INTO "media_items" ("id", "created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.823746', 'movie', 'sample overview', '/poster1.jpg', '2025-10-22', 'sample movie', 1, '2025-10-22 20:55:53.823746'), (298486374, '2025-10-22 20:55:53.823746', 'tv', 'sample overview', '/poster2.jpg', '2025-10-22', 'sample tv', 2, '2025-10-22 20:55:53.823746');
+INSERT INTO "users" ("id", "created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES (980190962, '2025-10-22 20:55:53.823797', 'test1@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.823797'), (298486374, '2025-10-22 20:55:53.823797', 'test2@example.com', DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, '2025-10-22 20:55:53.823797');
+INSERT INTO "watchlist_items" ("id", "created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES (980190962, '2025-10-22 20:55:53.823824', 980190962, 'planned', '2025-10-22 20:55:53.823824', 980190962, DEFAULT), (298486374, '2025-10-22 20:55:53.823824', 298486374, 'watched', '2025-10-22 20:55:53.823824', 298486374, DEFAULT)[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+Missing env vars: TMDB_API_KEY, STRIPE_SECRET_KEY
+STRIPE_SECRET_KEY is not set; Stripe API calls will fail
+  [1m[36mActiveRecord::InternalMetadata Load (0.7ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------------------
+WatchlistItemTest: test_uniqueness_per_user_and_media_item
+----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.3ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["created_at", "2025-10-22 20:58:37.673999"], ["email", "[FILTERED]"], ["encrypted_password", "[FILTERED]"], ["remember_created_at", nil], ["reset_password_sent_at", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["stripe_customer_id", nil], ["subscription_status", nil], ["updated_at", "2025-10-22 20:58:37.673999"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 999], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.2ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 20:58:37.681473"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "t"], ["tmdb_id", 999], ["updated_at", "2025-10-22 20:58:37.681473"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "watchlist_items" WHERE "watchlist_items"."media_item_id" = $1 AND "watchlist_items"."user_id" = $2 LIMIT $3[0m  [["media_item_id", 1], ["user_id", 1], ["LIMIT", 1]]
+  [1m[36mWatchlistItem Create (0.4ms)[0m  [1m[32mINSERT INTO "watchlist_items" ("created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["created_at", "2025-10-22 20:58:37.690258"], ["media_item_id", 1], ["status", "planned"], ["updated_at", "2025-10-22 20:58:37.690258"], ["user_id", 1], ["watched_on", nil]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "watchlist_items" WHERE "watchlist_items"."media_item_id" = $1 AND "watchlist_items"."user_id" = $2 LIMIT $3[0m  [["media_item_id", 1], ["user_id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------------------------
+MediaItemsControllerTest: test_show_loads_for_existing_item
+-----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 456], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.2ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 20:58:37.716485"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "x"], ["tmdb_id", 456], ["updated_at", "2025-10-22 20:58:37.716485"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/media_items/2" for 127.0.0.1 at 2025-10-22 16:58:37 -0400
+Processing by MediaItemsController#show as HTML
+  Parameters: {"id" => "2"}
+  [1m[36mMediaItem Load (0.6ms)[0m  [1m[34mSELECT "media_items".* FROM "media_items" WHERE "media_items"."id" = $1 LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/show.html.erb within layouts/application
+  Rendered media_items/show.html.erb within layouts/application (Duration: 0.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.7ms | GC: 0.7ms)
+Completed 200 OK in 34ms (Views: 10.0ms | ActiveRecord: 0.7ms (1 query, 0 cached) | GC: 2.0ms)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+MediaItemsControllerTest: test_index_loads
+------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/media_items" for 127.0.0.1 at 2025-10-22 16:58:37 -0400
+Processing by MediaItemsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/index.html.erb within layouts/application
+  Rendered media_items/index.html.erb within layouts/application (Duration: 0.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 0.9ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.2ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-------------------------------------------
+MediaItemsControllerTest: test_search_loads
+-------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/media_items/search" for 127.0.0.1 at 2025-10-22 16:58:37 -0400
+Processing by MediaItemsController#search as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/search.html.erb within layouts/application
+  Rendered media_items/search.html.erb within layouts/application (Duration: 3.8ms | GC: 0.4ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.4ms | GC: 0.4ms)
+Completed 200 OK in 5ms (Views: 4.6ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.4ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------------------
+UserTest: test_subscribed?_false_when_status_nil_or_other
+---------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------------
+UserTest: test_subscribed?_true_when_status_active
+--------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------
+MediaItemTest: test_validates_presence
+--------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mMediaItem Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" IS NULL LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------------
+MediaItemTest: test_validates_tmdb_id_uniqueness
+------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 123], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.2ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 20:58:37.874045"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "a"], ["tmdb_id", 123], ["updated_at", "2025-10-22 20:58:37.874045"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 123], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------------------------------------------
+SubscriptionsControllerTest: test_create_without_price_id_redirects_with_alert
+------------------------------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["created_at", "2025-10-22 20:58:37.879231"], ["email", "[FILTERED]"], ["encrypted_password", "[FILTERED]"], ["remember_created_at", nil], ["reset_password_sent_at", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["stripe_customer_id", nil], ["subscription_status", nil], ["updated_at", "2025-10-22 20:58:37.879231"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/subscriptions" for 127.0.0.1 at 2025-10-22 16:58:37 -0400
+Processing by SubscriptionsController#create as HTML
+Redirected to http://www.example.com/
+Completed 302 Found in 3ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------------
+SubscriptionsControllerTest: test_new_requires_login
+----------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/subscriptions/new" for 127.0.0.1 at 2025-10-22 16:58:37 -0400
+Processing by SubscriptionsController#new as HTML
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------------------------
+WatchlistItemsControllerTest: test_create_as_signed_in_user
+-----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["created_at", "2025-10-22 20:58:37.899908"], ["email", "[FILTERED]"], ["encrypted_password", "[FILTERED]"], ["remember_created_at", nil], ["reset_password_sent_at", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["stripe_customer_id", nil], ["subscription_status", nil], ["updated_at", "2025-10-22 20:58:37.899908"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 778], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.1ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 20:58:37.901580"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "z"], ["tmdb_id", 778], ["updated_at", "2025-10-22 20:58:37.901580"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "watchlist_items"[0m
+Started POST "/watchlist_items" for 127.0.0.1 at 2025-10-22 16:58:37 -0400
+Processing by WatchlistItemsController#create as HTML
+  Parameters: {"media_item_id" => "4", "status" => "planned"}
+  [1m[36mMediaItem Load (0.2ms)[0m  [1m[34mSELECT "media_items".* FROM "media_items" WHERE "media_items"."id" = $1 LIMIT $2[0m  [["id", 4], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "watchlist_items" WHERE "watchlist_items"."media_item_id" = $1 AND "watchlist_items"."user_id" = $2 LIMIT $3[0m  [["media_item_id", 4], ["user_id", 3], ["LIMIT", 1]]
+  [1m[36mWatchlistItem Create (0.3ms)[0m  [1m[32mINSERT INTO "watchlist_items" ("created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["created_at", "2025-10-22 20:58:37.914221"], ["media_item_id", 4], ["status", "planned"], ["updated_at", "2025-10-22 20:58:37.914221"], ["user_id", 3], ["watched_on", nil]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/media_items
+Completed 302 Found in 10ms (ActiveRecord: 1.0ms (3 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mWatchlistItem Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "watchlist_items"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------------------------
+WatchlistItemsControllerTest: test_requires_auth_for_create
+-----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 777], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.2ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 20:58:37.918789"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "y"], ["tmdb_id", 777], ["updated_at", "2025-10-22 20:58:37.918789"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/watchlist_items" for 127.0.0.1 at 2025-10-22 16:58:37 -0400
+Processing by WatchlistItemsController#create as HTML
+  Parameters: {"media_item_id" => "5"}
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------------------
+WebhooksControllerTest: test_webhook_endpoint_accepts_post
+----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started POST "/stripe/webhook" for 127.0.0.1 at 2025-10-22 16:58:37 -0400
+Processing by WebhooksController#stripe as HTML
+Completed 400 Bad Request in 0ms (Views: 0.1ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+Missing env vars: TMDB_API_KEY, STRIPE_SECRET_KEY
+STRIPE_SECRET_KEY is not set; Stripe API calls will fail
+  [1m[36mActiveRecord::InternalMetadata Load (0.7ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------------------------------------------
+SubscriptionsControllerTest: test_create_without_price_id_redirects_with_alert
+------------------------------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.3ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["created_at", "2025-10-22 20:59:20.150060"], ["email", "[FILTERED]"], ["encrypted_password", "[FILTERED]"], ["remember_created_at", nil], ["reset_password_sent_at", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["stripe_customer_id", nil], ["subscription_status", nil], ["updated_at", "2025-10-22 20:59:20.150060"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------------
+SubscriptionsControllerTest: test_new_requires_login
+----------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/subscriptions/new" for 127.0.0.1 at 2025-10-22 16:59:20 -0400
+Processing by SubscriptionsController#new as HTML
+Completed 401 Unauthorized in 5ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------------------
+WebhooksControllerTest: test_webhook_endpoint_accepts_post
+----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started POST "/stripe/webhook" for 127.0.0.1 at 2025-10-22 16:59:20 -0400
+Processing by WebhooksController#stripe as HTML
+  Parameters: {"webhook" => {}}
+Completed 200 OK in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------------------
+UserTest: test_subscribed?_false_when_status_nil_or_other
+---------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------------
+UserTest: test_subscribed?_true_when_status_active
+--------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------------------------
+WatchlistItemsControllerTest: test_create_as_signed_in_user
+-----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["created_at", "2025-10-22 20:59:20.214395"], ["email", "[FILTERED]"], ["encrypted_password", "[FILTERED]"], ["remember_created_at", nil], ["reset_password_sent_at", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["stripe_customer_id", nil], ["subscription_status", nil], ["updated_at", "2025-10-22 20:59:20.214395"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 778], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.2ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 20:59:20.221002"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "z"], ["tmdb_id", 778], ["updated_at", "2025-10-22 20:59:20.221002"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Count (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "watchlist_items"[0m
+Started POST "/watchlist_items" for 127.0.0.1 at 2025-10-22 16:59:20 -0400
+Processing by WatchlistItemsController#create as HTML
+  Parameters: {"media_item_id" => "6", "status" => "planned"}
+  [1m[36mMediaItem Load (0.5ms)[0m  [1m[34mSELECT "media_items".* FROM "media_items" WHERE "media_items"."id" = $1 LIMIT $2[0m  [["id", 6], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "watchlist_items" WHERE "watchlist_items"."media_item_id" = $1 AND "watchlist_items"."user_id" = $2 LIMIT $3[0m  [["media_item_id", 6], ["user_id", 5], ["LIMIT", 1]]
+  [1m[36mWatchlistItem Create (0.7ms)[0m  [1m[32mINSERT INTO "watchlist_items" ("created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["created_at", "2025-10-22 20:59:20.236226"], ["media_item_id", 6], ["status", "planned"], ["updated_at", "2025-10-22 20:59:20.236226"], ["user_id", 5], ["watched_on", nil]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/media_items
+Completed 302 Found in 10ms (ActiveRecord: 2.9ms (3 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mWatchlistItem Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "watchlist_items"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------------------------
+WatchlistItemsControllerTest: test_requires_auth_for_create
+-----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 777], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.1ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 20:59:20.242232"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "y"], ["tmdb_id", 777], ["updated_at", "2025-10-22 20:59:20.242232"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/watchlist_items" for 127.0.0.1 at 2025-10-22 16:59:20 -0400
+Processing by WatchlistItemsController#create as HTML
+  Parameters: {"media_item_id" => "7"}
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------------------------
+MediaItemsControllerTest: test_show_loads_for_existing_item
+-----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 456], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.1ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 20:59:20.247200"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "x"], ["tmdb_id", 456], ["updated_at", "2025-10-22 20:59:20.247200"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/media_items/8" for 127.0.0.1 at 2025-10-22 16:59:20 -0400
+Processing by MediaItemsController#show as HTML
+  Parameters: {"id" => "8"}
+  [1m[36mMediaItem Load (0.4ms)[0m  [1m[34mSELECT "media_items".* FROM "media_items" WHERE "media_items"."id" = $1 LIMIT $2[0m  [["id", 8], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/show.html.erb within layouts/application
+  Rendered media_items/show.html.erb within layouts/application (Duration: 0.4ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.0ms | GC: 1.6ms)
+Completed 200 OK in 11ms (Views: 8.5ms | ActiveRecord: 0.4ms (1 query, 0 cached) | GC: 2.2ms)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+MediaItemsControllerTest: test_index_loads
+------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/media_items" for 127.0.0.1 at 2025-10-22 16:59:20 -0400
+Processing by MediaItemsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/index.html.erb within layouts/application
+  Rendered media_items/index.html.erb within layouts/application (Duration: 1.1ms | GC: 0.6ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.5ms | GC: 0.6ms)
+Completed 200 OK in 2ms (Views: 1.8ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.6ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-------------------------------------------
+MediaItemsControllerTest: test_search_loads
+-------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/media_items/search" for 127.0.0.1 at 2025-10-22 16:59:20 -0400
+Processing by MediaItemsController#search as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/search.html.erb within layouts/application
+  Rendered media_items/search.html.erb within layouts/application (Duration: 2.1ms | GC: 0.5ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.6ms | GC: 0.5ms)
+Completed 200 OK in 3ms (Views: 2.9ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.5ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------
+MediaItemTest: test_validates_presence
+--------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mMediaItem Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" IS NULL LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------------
+MediaItemTest: test_validates_tmdb_id_uniqueness
+------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 123], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.2ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 20:59:20.308190"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "a"], ["tmdb_id", 123], ["updated_at", "2025-10-22 20:59:20.308190"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 123], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------------------
+WatchlistItemTest: test_uniqueness_per_user_and_media_item
+----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["created_at", "2025-10-22 20:59:20.312099"], ["email", "[FILTERED]"], ["encrypted_password", "[FILTERED]"], ["remember_created_at", nil], ["reset_password_sent_at", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["stripe_customer_id", nil], ["subscription_status", nil], ["updated_at", "2025-10-22 20:59:20.312099"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 999], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.1ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 20:59:20.313291"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "t"], ["tmdb_id", 999], ["updated_at", "2025-10-22 20:59:20.313291"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "watchlist_items" WHERE "watchlist_items"."media_item_id" = $1 AND "watchlist_items"."user_id" = $2 LIMIT $3[0m  [["media_item_id", 10], ["user_id", 6], ["LIMIT", 1]]
+  [1m[36mWatchlistItem Create (0.2ms)[0m  [1m[32mINSERT INTO "watchlist_items" ("created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["created_at", "2025-10-22 20:59:20.314606"], ["media_item_id", 10], ["status", "planned"], ["updated_at", "2025-10-22 20:59:20.314606"], ["user_id", 6], ["watched_on", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "watchlist_items" WHERE "watchlist_items"."media_item_id" = $1 AND "watchlist_items"."user_id" = $2 LIMIT $3[0m  [["media_item_id", 10], ["user_id", 6], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+Missing env vars: TMDB_API_KEY, STRIPE_SECRET_KEY
+STRIPE_SECRET_KEY is not set; Stripe API calls will fail
+  [1m[36mActiveRecord::InternalMetadata Load (1.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------------------
+WatchlistItemTest: test_uniqueness_per_user_and_media_item
+----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["created_at", "2025-10-22 21:00:07.408560"], ["email", "[FILTERED]"], ["encrypted_password", "[FILTERED]"], ["remember_created_at", nil], ["reset_password_sent_at", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["stripe_customer_id", nil], ["subscription_status", nil], ["updated_at", "2025-10-22 21:00:07.408560"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 999], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.2ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 21:00:07.416966"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "t"], ["tmdb_id", 999], ["updated_at", "2025-10-22 21:00:07.416966"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "watchlist_items" WHERE "watchlist_items"."media_item_id" = $1 AND "watchlist_items"."user_id" = $2 LIMIT $3[0m  [["media_item_id", 11], ["user_id", 7], ["LIMIT", 1]]
+  [1m[36mWatchlistItem Create (0.5ms)[0m  [1m[32mINSERT INTO "watchlist_items" ("created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["created_at", "2025-10-22 21:00:07.425044"], ["media_item_id", 11], ["status", "planned"], ["updated_at", "2025-10-22 21:00:07.425044"], ["user_id", 7], ["watched_on", nil]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "watchlist_items" WHERE "watchlist_items"."media_item_id" = $1 AND "watchlist_items"."user_id" = $2 LIMIT $3[0m  [["media_item_id", 11], ["user_id", 7], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------------------------------------------
+SubscriptionsControllerTest: test_create_without_price_id_redirects_with_alert
+------------------------------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["created_at", "2025-10-22 21:00:07.452011"], ["email", "[FILTERED]"], ["encrypted_password", "[FILTERED]"], ["remember_created_at", nil], ["reset_password_sent_at", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["stripe_customer_id", nil], ["subscription_status", nil], ["updated_at", "2025-10-22 21:00:07.452011"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/subscriptions" for 127.0.0.1 at 2025-10-22 17:00:07 -0400
+Processing by SubscriptionsController#create as HTML
+Redirected to http://www.example.com/
+Completed 302 Found in 5ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------------
+SubscriptionsControllerTest: test_new_requires_login
+----------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/subscriptions/new" for 127.0.0.1 at 2025-10-22 17:00:07 -0400
+Processing by SubscriptionsController#new as HTML
+Completed 401 Unauthorized in 1ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------------------
+WebhooksControllerTest: test_webhook_endpoint_accepts_post
+----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started POST "/stripe/webhook" for 127.0.0.1 at 2025-10-22 17:00:07 -0400
+Processing by WebhooksController#stripe as HTML
+  Parameters: {"webhook" => {}}
+Completed 200 OK in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+MediaItemsControllerTest: test_index_loads
+------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/media_items" for 127.0.0.1 at 2025-10-22 17:00:07 -0400
+Processing by MediaItemsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/index.html.erb within layouts/application
+  Rendered media_items/index.html.erb within layouts/application (Duration: 0.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 3.7ms | GC: 0.0ms)
+Completed 200 OK in 7ms (Views: 5.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------------------------
+MediaItemsControllerTest: test_show_loads_for_existing_item
+-----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 456], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.1ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 21:00:07.521695"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "x"], ["tmdb_id", 456], ["updated_at", "2025-10-22 21:00:07.521695"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/media_items/12" for 127.0.0.1 at 2025-10-22 17:00:07 -0400
+Processing by MediaItemsController#show as HTML
+  Parameters: {"id" => "12"}
+  [1m[36mMediaItem Load (0.2ms)[0m  [1m[34mSELECT "media_items".* FROM "media_items" WHERE "media_items"."id" = $1 LIMIT $2[0m  [["id", 12], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/show.html.erb within layouts/application
+  Rendered media_items/show.html.erb within layouts/application (Duration: 0.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.2ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.4ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-------------------------------------------
+MediaItemsControllerTest: test_search_loads
+-------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/media_items/search" for 127.0.0.1 at 2025-10-22 17:00:07 -0400
+Processing by MediaItemsController#search as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/search.html.erb within layouts/application
+  Rendered media_items/search.html.erb within layouts/application (Duration: 1.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.0ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 2.2ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------------------------
+WatchlistItemsControllerTest: test_create_as_signed_in_user
+-----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["created_at", "2025-10-22 21:00:07.533152"], ["email", "[FILTERED]"], ["encrypted_password", "[FILTERED]"], ["remember_created_at", nil], ["reset_password_sent_at", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["stripe_customer_id", nil], ["subscription_status", nil], ["updated_at", "2025-10-22 21:00:07.533152"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 778], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.2ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 21:00:07.534588"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "z"], ["tmdb_id", 778], ["updated_at", "2025-10-22 21:00:07.534588"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "watchlist_items"[0m
+Started POST "/watchlist_items" for 127.0.0.1 at 2025-10-22 17:00:07 -0400
+Processing by WatchlistItemsController#create as HTML
+  Parameters: {"media_item_id" => "13", "status" => "planned"}
+  [1m[36mMediaItem Load (0.2ms)[0m  [1m[34mSELECT "media_items".* FROM "media_items" WHERE "media_items"."id" = $1 LIMIT $2[0m  [["id", 13], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "watchlist_items" WHERE "watchlist_items"."media_item_id" = $1 AND "watchlist_items"."user_id" = $2 LIMIT $3[0m  [["media_item_id", 13], ["user_id", 9], ["LIMIT", 1]]
+  [1m[36mWatchlistItem Create (0.4ms)[0m  [1m[32mINSERT INTO "watchlist_items" ("created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["created_at", "2025-10-22 21:00:07.540875"], ["media_item_id", 13], ["status", "planned"], ["updated_at", "2025-10-22 21:00:07.540875"], ["user_id", 9], ["watched_on", nil]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/media_items
+Completed 302 Found in 5ms (ActiveRecord: 1.0ms (3 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mWatchlistItem Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "watchlist_items"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------------------------
+WatchlistItemsControllerTest: test_requires_auth_for_create
+-----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 777], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.3ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 21:00:07.545015"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "y"], ["tmdb_id", 777], ["updated_at", "2025-10-22 21:00:07.545015"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/watchlist_items" for 127.0.0.1 at 2025-10-22 17:00:07 -0400
+Processing by WatchlistItemsController#create as HTML
+  Parameters: {"media_item_id" => "14"}
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------------------
+UserTest: test_subscribed?_false_when_status_nil_or_other
+---------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------------
+UserTest: test_subscribed?_true_when_status_active
+--------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------
+MediaItemTest: test_validates_presence
+--------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mMediaItem Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" IS NULL LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------------
+MediaItemTest: test_validates_tmdb_id_uniqueness
+------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 123], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.1ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 21:00:07.552304"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "a"], ["tmdb_id", 123], ["updated_at", "2025-10-22 21:00:07.552304"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 123], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+Missing env vars: TMDB_API_KEY, STRIPE_SECRET_KEY
+STRIPE_SECRET_KEY is not set; Stripe API calls will fail
+  [1m[36mActiveRecord::InternalMetadata Load (0.7ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------
+MediaItemTest: test_validates_presence
+--------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mMediaItem Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" IS NULL LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------------
+MediaItemTest: test_validates_tmdb_id_uniqueness
+------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 123], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.3ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 21:12:26.513000"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "a"], ["tmdb_id", 123], ["updated_at", "2025-10-22 21:12:26.513000"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 123], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------------------------
+WatchlistItemsControllerTest: test_create_as_signed_in_user
+-----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists? (0.8ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["created_at", "2025-10-22 21:12:26.548248"], ["email", "[FILTERED]"], ["encrypted_password", "[FILTERED]"], ["remember_created_at", nil], ["reset_password_sent_at", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["stripe_customer_id", nil], ["subscription_status", nil], ["updated_at", "2025-10-22 21:12:26.548248"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 778], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.2ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 21:12:26.549961"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "z"], ["tmdb_id", 778], ["updated_at", "2025-10-22 21:12:26.549961"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "watchlist_items"[0m
+Started POST "/watchlist_items" for 127.0.0.1 at 2025-10-22 17:12:26 -0400
+Processing by WatchlistItemsController#create as HTML
+  Parameters: {"media_item_id" => "17", "status" => "planned"}
+  [1m[36mMediaItem Load (0.8ms)[0m  [1m[34mSELECT "media_items".* FROM "media_items" WHERE "media_items"."id" = $1 LIMIT $2[0m  [["id", 17], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "watchlist_items" WHERE "watchlist_items"."media_item_id" = $1 AND "watchlist_items"."user_id" = $2 LIMIT $3[0m  [["media_item_id", 17], ["user_id", 10], ["LIMIT", 1]]
+  [1m[36mWatchlistItem Create (0.4ms)[0m  [1m[32mINSERT INTO "watchlist_items" ("created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["created_at", "2025-10-22 21:12:26.605704"], ["media_item_id", 17], ["status", "planned"], ["updated_at", "2025-10-22 21:12:26.605704"], ["user_id", 10], ["watched_on", nil]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/media_items
+Completed 302 Found in 16ms (ActiveRecord: 2.9ms (3 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mWatchlistItem Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "watchlist_items"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------------------------
+WatchlistItemsControllerTest: test_requires_auth_for_create
+-----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 777], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.2ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 21:12:26.612052"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "y"], ["tmdb_id", 777], ["updated_at", "2025-10-22 21:12:26.612052"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/watchlist_items" for 127.0.0.1 at 2025-10-22 17:12:26 -0400
+Processing by WatchlistItemsController#create as HTML
+  Parameters: {"media_item_id" => "18"}
+Completed 401 Unauthorized in 1ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+---------------------------------------------------------
+UserTest: test_subscribed?_false_when_status_nil_or_other
+---------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+--------------------------------------------------
+UserTest: test_subscribed?_true_when_status_active
+--------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------
+MediaItemsControllerTest: test_index_loads
+------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/media_items" for 127.0.0.1 at 2025-10-22 17:12:26 -0400
+Processing by MediaItemsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/index.html.erb within layouts/application
+  Rendered media_items/index.html.erb within layouts/application (Duration: 1.6ms | GC: 0.8ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.3ms | GC: 2.1ms)
+Completed 200 OK in 44ms (Views: 8.7ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 34.7ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-----------------------------------------------------------
+MediaItemsControllerTest: test_show_loads_for_existing_item
+-----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 456], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.2ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 21:12:26.672080"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "x"], ["tmdb_id", 456], ["updated_at", "2025-10-22 21:12:26.672080"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/media_items/19" for 127.0.0.1 at 2025-10-22 17:12:26 -0400
+Processing by MediaItemsController#show as HTML
+  Parameters: {"id" => "19"}
+  [1m[36mMediaItem Load (0.2ms)[0m  [1m[34mSELECT "media_items".* FROM "media_items" WHERE "media_items"."id" = $1 LIMIT $2[0m  [["id", 19], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/show.html.erb within layouts/application
+  Rendered media_items/show.html.erb within layouts/application (Duration: 0.4ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.2ms | GC: 0.9ms)
+Completed 200 OK in 3ms (Views: 2.5ms | ActiveRecord: 0.2ms (1 query, 0 cached) | GC: 0.9ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+-------------------------------------------
+MediaItemsControllerTest: test_search_loads
+-------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/media_items/search" for 127.0.0.1 at 2025-10-22 17:12:26 -0400
+Processing by MediaItemsController#search as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/search.html.erb within layouts/application
+  Rendered media_items/search.html.erb within layouts/application (Duration: 2.2ms | GC: 0.6ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.7ms | GC: 0.6ms)
+Completed 200 OK in 3ms (Views: 2.9ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.6ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------------------
+WebhooksControllerTest: test_webhook_endpoint_accepts_post
+----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started POST "/stripe/webhook" for 127.0.0.1 at 2025-10-22 17:12:26 -0400
+Processing by WebhooksController#stripe as HTML
+  Parameters: {"webhook" => {}}
+Completed 200 OK in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+------------------------------------------------------------------------------
+SubscriptionsControllerTest: test_create_without_price_id_redirects_with_alert
+------------------------------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["created_at", "2025-10-22 21:12:26.689617"], ["email", "[FILTERED]"], ["encrypted_password", "[FILTERED]"], ["remember_created_at", nil], ["reset_password_sent_at", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["stripe_customer_id", nil], ["subscription_status", nil], ["updated_at", "2025-10-22 21:12:26.689617"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/subscriptions" for 127.0.0.1 at 2025-10-22 17:12:26 -0400
+Processing by SubscriptionsController#create as HTML
+Redirected to http://www.example.com/
+Completed 302 Found in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------------
+SubscriptionsControllerTest: test_new_requires_login
+----------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+Started GET "/subscriptions/new" for 127.0.0.1 at 2025-10-22 17:12:26 -0400
+Processing by SubscriptionsController#new as HTML
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN[0m
+----------------------------------------------------------
+WatchlistItemTest: test_uniqueness_per_user_and_media_item
+----------------------------------------------------------
+[dotenv] Saved a snapshot of [32mENV[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("created_at", "email", "encrypted_password", "remember_created_at", "reset_password_sent_at", "reset_password_token", "stripe_customer_id", "subscription_status", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING "id"[0m  [["created_at", "2025-10-22 21:12:26.699903"], ["email", "[FILTERED]"], ["encrypted_password", "[FILTERED]"], ["remember_created_at", nil], ["reset_password_sent_at", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["stripe_customer_id", nil], ["subscription_status", nil], ["updated_at", "2025-10-22 21:12:26.699903"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mMediaItem Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "media_items" WHERE "media_items"."tmdb_id" = $1 LIMIT $2[0m  [["tmdb_id", 999], ["LIMIT", 1]]
+  [1m[36mMediaItem Create (0.1ms)[0m  [1m[32mINSERT INTO "media_items" ("created_at", "media_type", "overview", "poster_path", "release_date", "title", "tmdb_id", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["created_at", "2025-10-22 21:12:26.701262"], ["media_type", "movie"], ["overview", nil], ["poster_path", nil], ["release_date", nil], ["title", "t"], ["tmdb_id", 999], ["updated_at", "2025-10-22 21:12:26.701262"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "watchlist_items" WHERE "watchlist_items"."media_item_id" = $1 AND "watchlist_items"."user_id" = $2 LIMIT $3[0m  [["media_item_id", 20], ["user_id", 12], ["LIMIT", 1]]
+  [1m[36mWatchlistItem Create (0.2ms)[0m  [1m[32mINSERT INTO "watchlist_items" ("created_at", "media_item_id", "status", "updated_at", "user_id", "watched_on") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["created_at", "2025-10-22 21:12:26.702633"], ["media_item_id", 20], ["status", "planned"], ["updated_at", "2025-10-22 21:12:26.702633"], ["user_id", 12], ["watched_on", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mWatchlistItem Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "watchlist_items" WHERE "watchlist_items"."media_item_id" = $1 AND "watchlist_items"."user_id" = $2 LIMIT $3[0m  [["media_item_id", 20], ["user_id", 12], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK[0m

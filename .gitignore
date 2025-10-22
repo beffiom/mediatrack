@@ -3,3 +3,7 @@ config/credentials/*.key
 .env*
 vendor/bundle/
 .fly/
+
+# Ignore key files for decrypting credentials and more.
+/config/*.key
+

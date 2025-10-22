@@ -1,18 +1,19 @@
 require "test_helper"
 
 class MediaItemsControllerTest < ActionDispatch::IntegrationTest
-  test "should get index" do
-    get media_items_index_url
+  test "index loads" do
+    get media_items_path
     assert_response :success
   end
 
-  test "should get show" do
-    get media_items_show_url
+  test "search loads" do
+    get search_media_items_path
     assert_response :success
   end
 
-  test "should get search" do
-    get media_items_search_url
+  test "show loads for existing item" do
+    m = MediaItem.create!(tmdb_id: 456, title: "x", media_type: "movie")
+    get media_item_path(m)
     assert_response :success
   end
 end
