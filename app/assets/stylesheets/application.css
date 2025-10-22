@@ -1,10 +1,27 @@
-/*
- * This is a manifest file that'll be compiled into application.css.
- *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
- *
- * Consider organizing styles into separate files for maintainability.
- */
+/* Terminal theme */
+:root {
+  --terminal-green: #00ff7f;
+  --terminal-bg: #000000;
+  --terminal-dim: #0a0a0a;
+}
+
+.terminal-bg { background: var(--terminal-bg); min-height: 100vh; }
+.terminal-text { color: var(--terminal-green); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 1rem; }
+.nav { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--terminal-green); }
+.nav-link, .brand-link { color: var(--terminal-green); text-decoration: none; margin-right: 1rem; }
+.nav .btn-link { background: transparent; border: 1px solid var(--terminal-green); padding: 0.25rem 0.5rem; cursor: pointer; }
+.brand { font-weight: bold; }
+
+.flash { padding: 0.5rem 0.75rem; border: 1px solid var(--terminal-green); background: var(--terminal-dim); margin: 1rem 0; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+.card { border: 1px solid var(--terminal-green); padding: 0.5rem; background: var(--terminal-dim); }
+.card img { width: 100%; height: auto; display: block; }
+.card .title { font-weight: bold; margin-top: 0.5rem; }
+.muted { opacity: 0.8; }
+.btn { display: inline-block; color: var(--terminal-green); border: 1px solid var(--terminal-green); padding: 0.25rem 0.5rem; text-decoration: none; background: transparent; }
+
+form.inline { display: inline-flex; gap: 0.5rem; align-items: center; }
+input, select { background: #000; color: var(--terminal-green); border: 1px solid var(--terminal-green); padding: 0.25rem; }

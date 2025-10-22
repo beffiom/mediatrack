@@ -1,2 +1,8 @@
-<h1>MediaItems#show</h1>
-<p>Find me in app/views/media_items/show.html.erb</p>
+<section>
+  <h2><%= @media_item.title %> <% if @media_item.release_date %>(<%= @media_item.release_date.year %>)<% end %></h2>
+  <% if @media_item.poster_path.present? %>
+    <img src="https://image.tmdb.org/t/p/w300<%= @media_item.poster_path %>" alt="<%= @media_item.title %>">
+  <% end %>
+  <p class="muted"><%= @media_item.media_type.upcase %></p>
+  <p><%= @media_item.overview %></p>
+</section>

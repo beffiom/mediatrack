@@ -1,2 +1,17 @@
-<h1>MediaItems#index</h1>
-<p>Find me in app/views/media_items/index.html.erb</p>
+<section>
+  <h1>mediatrack</h1>
+  <p class="muted">Track movies, TV, and anime you want to watch and have watched. Search via TMDB, subscribe for recommendations.</p>
+
+  <% if user_signed_in? %>
+    <p>
+      Jump to: <%= link_to "Movies", movies_path, class: "btn" %>
+      <%= link_to "TV Shows", tv_path, class: "btn" %>
+      <%= link_to "Anime", anime_path, class: "btn" %>
+    </p>
+  <% else %>
+    <p>
+      <%= link_to "Sign in", new_user_session_path, class: "btn" %>
+      <%= link_to "Create account", new_user_registration_path, class: "btn" %>
+    </p>
+  <% end %>
+</section>
