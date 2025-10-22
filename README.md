@@ -13,8 +13,6 @@ set these in development via `.env` (dotenv-rails loads it) and in production vi
 - STRIPE_PRICE_ID
 - STRIPE_WEBHOOK_SECRET (optional in dev)
 
-never commit secrets. `.gitignore` excludes: `config/master.key`, `.env*`, `config/credentials/*.key`, `vendor/bundle/`, `.fly/`.
-
 ## deploy (fly.io)
 - create app: `flyctl apps create <app-name>`
 - set secrets:
