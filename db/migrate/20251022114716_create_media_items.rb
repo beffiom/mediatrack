@@ -10,6 +10,6 @@ class CreateMediaItems < ActiveRecord::Migration[8.1]
 
       t.timestamps
     end
-    add_index :media_items, :tmdb_id
+    add_index :media_items, :tmdb_id, unique: true
   end
 end
