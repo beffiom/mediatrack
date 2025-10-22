@@ -17,6 +17,11 @@ Rails.application.routes.draw do
   # Subscriptions (Stripe checkout/management)
   resources :subscriptions, only: [:new, :create, :destroy]
 
+  # Section pages
+  get "movies", to: "media_items#movies"
+  get "tv", to: "media_items#tv"
+  get "anime", to: "media_items#anime"
+
   # Stripe webhooks
   post "stripe/webhook", to: "webhooks#stripe"
 
