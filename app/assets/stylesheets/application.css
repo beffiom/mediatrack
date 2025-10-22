@@ -25,3 +25,6 @@
 
 form.inline { display: inline-flex; gap: 0.5rem; align-items: center; }
 input, select { background: #000; color: var(--terminal-green); border: 1px solid var(--terminal-green); padding: 0.25rem; }
+
+/* enforce lowercase ui text */
+h1, h2, h3, .nav-link, .btn, label, .flash, .brand-link { text-transform: lowercase; }
