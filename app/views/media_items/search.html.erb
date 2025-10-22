@@ -1,11 +1,11 @@
 <section>
-  <h2>Search TMDB</h2>
+  <h2>search tmdb</h2>
   <%= form_with url: search_media_items_path, method: :get, local: true, class: "inline" do |f| %>
-    <%= f.label :q, "Query" %>
+    <%= f.label :q, "query" %>
     <%= f.text_field :q, value: params[:q] %>
-    <%= f.label :media_type, "Type" %>
-    <%= f.select :media_type, options_for_select([["Any",""],["Movies","movie"],["TV","tv"],["Anime","anime"]], params[:media_type]) %>
-    <%= f.submit "Search", class: "btn" %>
+    <%= f.label :media_type, "type" %>
+    <%= f.select :media_type, options_for_select([["any",""],["movies","movie"],["tv","tv"],["anime","anime"]], params[:media_type]) %>
+    <%= f.submit "search", class: "btn" %>
   <% end %>
 
   <% if @results.present? %>
@@ -16,8 +16,8 @@
             <img src="https://image.tmdb.org/t/p/w200<%= r[:poster_path] %>" alt="<%= r[:title] %>">
           <% end %>
           <div class="title"><%= r[:title] %> <% if r[:release_date].present? %>(<%= r[:release_date].to_s[0,4] %>)<% end %></div>
-          <div class="muted"><%= r[:media_type].upcase %></div>
-          <%= button_to "Add to watchlist", watchlist_items_path, method: :post, class: "btn",
+          <div class="muted"><%= r[:media_type] %></div>
+          <%= button_to "add to watchlist", watchlist_items_path, method: :post, class: "btn",
                 params: { tmdb_id: r[:tmdb_id], title: r[:title], media_type: r[:media_type], poster_path: r[:poster_path], release_date: r[:release_date], status: "planned" } %>
         </div>
       <% end %>

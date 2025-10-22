@@ -1,17 +1,17 @@
 <section>
   <h1>mediatrack</h1>
-  <p class="muted">Track movies, TV, and anime you want to watch and have watched. Search via TMDB, subscribe for recommendations.</p>
+  <p class="muted">track movies, tv, and anime you want to watch and have watched. search via tmdb, subscribe for recommendations.</p>
 
   <% if user_signed_in? %>
     <p>
-      Jump to: <%= link_to "Movies", movies_path, class: "btn" %>
-      <%= link_to "TV Shows", tv_path, class: "btn" %>
-      <%= link_to "Anime", anime_path, class: "btn" %>
+      jump to: <%= link_to "movies", movies_path, class: "btn" %>
+      <%= link_to "tv shows", tv_path, class: "btn" %>
+      <%= link_to "anime", anime_path, class: "btn" %>
     </p>
   <% else %>
     <p>
-      <%= link_to "Sign in", new_user_session_path, class: "btn" %>
-      <%= link_to "Create account", new_user_registration_path, class: "btn" %>
+      <%= link_to "sign in", new_user_session_path, class: "btn" %>
+      <%= link_to "create account", new_user_registration_path, class: "btn" %>
     </p>
   <% end %>
 </section>

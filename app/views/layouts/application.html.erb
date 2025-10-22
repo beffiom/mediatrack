@@ -27,16 +27,16 @@
     <header class="container nav">
       <div class="brand"><%= link_to "mediatrack", root_path, class: "brand-link" %></div>
       <nav>
-        <%= link_to "Movies", movies_path, class: "nav-link" %>
-        <%= link_to "TV Shows", tv_path, class: "nav-link" %>
-        <%= link_to "Anime", anime_path, class: "nav-link" %>
-        <%= link_to "Search", search_media_items_path, class: "nav-link" %>
+        <%= link_to "movies", movies_path, class: "nav-link" %>
+        <%= link_to "tv shows", tv_path, class: "nav-link" %>
+        <%= link_to "anime", anime_path, class: "nav-link" %>
+        <%= link_to "search", search_media_items_path, class: "nav-link" %>
         <% if user_signed_in? %>
-          <span class="nav-link">Hi, <%= current_user.email %></span>
-          <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "nav-link btn-link" %>
+          <span class="nav-link">hi, <%= current_user.email %></span>
+          <%= button_to "sign out", destroy_user_session_path, method: :delete, class: "nav-link btn-link" %>
         <% else %>
-          <%= link_to "Sign in", new_user_session_path, class: "nav-link" %>
-          <%= link_to "Sign up", new_user_registration_path, class: "nav-link" %>
+          <%= link_to "sign in", new_user_session_path, class: "nav-link" %>
+          <%= link_to "sign up", new_user_registration_path, class: "nav-link" %>
         <% end %>
       </nav>
     </header>

@@ -4,19 +4,19 @@ class WatchlistItemsController < ApplicationController
   def create
     media = find_or_create_media_item
     item = current_user.watchlist_items.create!(media_item: media, status: safe_params[:status] || "planned", watched_on: safe_params[:watched_on])
-    redirect_back fallback_location: media_items_path, notice: "Added to your watchlist"
+    redirect_back fallback_location: media_items_path, notice: "added to your watchlist"
   end
 
   def update
     item = current_user.watchlist_items.find(params[:id])
     item.update!(safe_params)
-    redirect_back fallback_location: media_items_path, notice: "Updated watchlist item"
+    redirect_back fallback_location: media_items_path, notice: "updated watchlist item"
   end
 
   def destroy
     item = current_user.watchlist_items.find(params[:id])
     item.destroy!
-    redirect_back fallback_location: media_items_path, notice: "Removed from watchlist"
+    redirect_back fallback_location: media_items_path, notice: "removed from watchlist"
   end
 
   private

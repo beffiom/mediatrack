@@ -7,7 +7,7 @@ class SubscriptionsController < ApplicationController
   def create
     price_id = ENV["STRIPE_PRICE_ID"]
     unless price_id.present?
-      redirect_to root_path, alert: "Missing STRIPE_PRICE_ID"
+      redirect_to root_path, alert: "missing stripe price id"
       return
     end
 
@@ -26,7 +26,7 @@ class SubscriptionsController < ApplicationController
 
   def destroy
     # Implement cancellation or portal redirection later
-    redirect_to root_path, notice: "Subscription management coming soon"
+    redirect_to root_path, notice: "subscription management coming soon"
   end
 
   private
