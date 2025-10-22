@@ -8,6 +8,16 @@
     <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
   </div>
 
+  <div class="field">
+    <%= f.label :tmdb_api_key, "tmdb api key" %><br />
+    <%= f.text_field :tmdb_api_key, autocomplete: "off" %>
+    <% if resource.errors[:tmdb_api_key].present? %>
+      <span class="icon-x">✖ invalid api key</span>
+    <% elsif resource.tmdb_api_key.present? %>
+      <span class="icon-check">✔</span>
+    <% end %>
+  </div>
+
   <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
     <div>currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
   <% end %>

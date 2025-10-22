@@ -33,6 +33,7 @@
         <%= link_to "search", search_media_items_path, class: "nav-link" %>
         <% if user_signed_in? %>
           <span class="nav-link">hi, <%= current_user.email %></span>
+          <%= link_to "profile", edit_user_registration_path, class: "nav-link" %>
           <%= button_to "sign out", destroy_user_session_path, method: :delete, class: "nav-link btn-link" %>
         <% else %>
           <%= link_to "sign in", new_user_session_path, class: "nav-link" %>

@@ -12,6 +12,16 @@ module Tmdb
       end
     end
 
+    # Returns true if the API key successfully accesses the configuration endpoint
+    def valid_key?
+      begin
+        get("/configuration")
+        true
+      rescue
+        false
+      end
+    end
+
     def search_multi(query, media_type: nil)
       # Use multi search then filter into movie/tv, with crude anime handling
       resp = get("/search/multi", query: query)

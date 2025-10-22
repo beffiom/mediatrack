@@ -14,7 +14,8 @@ class MediaItemsController < ApplicationController
     query = params[:q].to_s.strip
     @results = []
     if query.present?
-      client = Tmdb::Client.new
+      api_key = current_user&.tmdb_api_key.presence || ENV["TMDB_API_KEY"]
+      client = Tmdb::Client.new(api_key: api_key)
       @results = client.search_multi(query, media_type: params[:media_type])
     end
   end
