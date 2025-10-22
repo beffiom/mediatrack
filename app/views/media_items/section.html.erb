@@ -1,5 +1,5 @@
 <section>
-  <h2><%= @media_type.upcase %> watchlists</h2>
+  <h2><%= @media_type %> watchlists</h2>
   <p>
     <%= link_to "Add new title", search_media_items_path(media_type: (@media_type == "anime" ? "anime" : @media_type)), class: "btn" %>
   </p>

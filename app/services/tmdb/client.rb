@@ -1,3 +1,5 @@
+require "json"
+
 module Tmdb
   class Client
     BASE_URL = "https://api.themoviedb.org/3"
@@ -6,7 +8,6 @@ module Tmdb
       @api_key = api_key
       @conn = Faraday.new(url: BASE_URL) do |f|
         f.request :url_encoded
-        f.response :json, content_type: /\bjson$/
         f.adapter Faraday.default_adapter
       end
     end
@@ -36,7 +37,7 @@ module Tmdb
       if res.status >= 400
         raise "TMDB error #{res.status}: #{res.body}"
       end
-      res.body
+      JSON.parse(res.body)
     end
 
     def normalize_result(r)

@@ -3,6 +3,6 @@
   <% if @media_item.poster_path.present? %>
     <img src="https://image.tmdb.org/t/p/w300<%= @media_item.poster_path %>" alt="<%= @media_item.title %>">
   <% end %>
-  <p class="muted"><%= @media_item.media_type.upcase %></p>
+  <p class="muted"><%= @media_item.media_type %></p>
   <p><%= @media_item.overview %></p>
 </section>
