@@ -39,12 +39,24 @@ class WatchlistItemsController < ApplicationController
     if safe_params[:media_item_id].present?
       MediaItem.find(safe_params[:media_item_id])
     else
-      media = MediaItem.find_or_initialize_by(tmdb_id: safe_params[:tmdb_id].to_i)
-      media.title ||= safe_params[:title]
-      media.media_type ||= safe_params[:media_type]
-      media.poster_path ||= safe_params[:poster_path]
-      media.release_date ||= safe_params[:release_date]
-      media.save!
+      tmdb_id = safe_params[:tmdb_id].to_i
+      # Try to fetch from cache first
+      media = Rails.cache.fetch("media_item/tmdb_id:#{tmdb_id}", expires_in: 24.hours) do
+        MediaItem.find_by(tmdb_id: tmdb_id)
+      end
+      
+      # If not found, create new media item
+      if media.nil?
+        media = MediaItem.new(tmdb_id: tmdb_id)
+        media.title = safe_params[:title]
+        media.media_type = safe_params[:media_type]
+        media.poster_path = safe_params[:poster_path]
+        media.release_date = safe_params[:release_date]
+        media.save!
+        # Cache the newly created media item
+        Rails.cache.write("media_item/tmdb_id:#{tmdb_id}", media, expires_in: 24.hours)
+      end
+      
       media
     end
   end

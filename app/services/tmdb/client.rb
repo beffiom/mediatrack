@@ -1,4 +1,5 @@
 require "json"
+require "digest"
 
 module Tmdb
   class Error < StandardError; end
@@ -35,22 +36,26 @@ module Tmdb
     end
 
     def search_multi(query, media_type: nil)
-      # Use multi search then filter into movie/tv, with crude anime handling
-      resp = get("/search/multi", query: query)
-      results = resp.fetch("results", [])
-      results = results.select { |r| %w[movie tv].include?(r["media_type"]) }
-      is_anime = false
-      if media_type.present?
-        if media_type == "anime"
-          # Treat anime as tv with animation genre (16) or origin JP
-          results = results.select { |r| r["media_type"] == "tv" }
-          is_anime = true
-          # We can't filter genres reliably from multi results; leave to user
-        else
-          results = results.select { |r| r["media_type"] == media_type }
+      # Cache search results to reduce TMDB API calls
+      cache_key = "tmdb/search/#{Digest::MD5.hexdigest("#{query}:#{media_type}")}"
+      Rails.cache.fetch(cache_key, expires_in: 1.hour) do
+        # Use multi search then filter into movie/tv, with crude anime handling
+        resp = get("/search/multi", query: query)
+        results = resp.fetch("results", [])
+        results = results.select { |r| %w[movie tv].include?(r["media_type"]) }
+        is_anime = false
+        if media_type.present?
+          if media_type == "anime"
+            # Treat anime as tv with animation genre (16) or origin JP
+            results = results.select { |r| r["media_type"] == "tv" }
+            is_anime = true
+            # We can't filter genres reliably from multi results; leave to user
+          else
+            results = results.select { |r| r["media_type"] == media_type }
+          end
         end
+        results.map { |r| normalize_result(r, is_anime: is_anime) }
       end
-      results.map { |r| normalize_result(r, is_anime: is_anime) }
     end
 
     private

@@ -35,9 +35,19 @@ class MediaItemsController < ApplicationController
   def render_section(type)
     authenticate_user!
     @media_type = type
-    scope = current_user.watchlist_items.includes(:media_item).joins(:media_item).where(media_items: { media_type: type })
-    @watched = scope.where(status: "watched")
-    @planned = scope.where(status: "planned")
+    
+    # Cache watchlist queries per user and media type
+    cache_key = "user/#{current_user.id}/watchlist/#{type}"
+    cached_data = Rails.cache.fetch(cache_key, expires_in: 5.minutes) do
+      scope = current_user.watchlist_items.includes(:media_item).joins(:media_item).where(media_items: { media_type: type })
+      {
+        watched: scope.where(status: "watched").to_a,
+        planned: scope.where(status: "planned").to_a
+      }
+    end
+    
+    @watched = cached_data[:watched]
+    @planned = cached_data[:planned]
     render :section
   end
 end
