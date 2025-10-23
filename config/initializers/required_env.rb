@@ -1,7 +1,7 @@
 # Validate presence of critical environment variables
 # Fail fast in production; warn in development/test.
 
-required = %w[STRIPE_SECRET_KEY]
+required = %w[]
 missing = required.select { |k| ENV[k].to_s.strip.empty? }
 
 if missing.any?

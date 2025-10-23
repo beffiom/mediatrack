@@ -5493,3 +5493,91 @@ Processing by MediaItemsController#search as HTML
 Completed 200 OK in 14ms (Views: 10.3ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 2.4ms)
 
 
+Started GET "/tv" for 127.0.0.1 at 2025-10-23 18:58:02 -0400
+Processing by MediaItemsController#tv as HTML
+  [1m[36mUser Load (8.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 4 ORDER BY "users"."id" ASC LIMIT 1 /*action='tv',application='Mediatrack',controller='media_items'*/[0m
+  ↳ app/controllers/media_items_controller.rb:36:in 'MediaItemsController#render_section'
+  [1m[36mWatchlistItem Eager Load (0.9ms)[0m  [1m[34mSELECT "watchlist_items"."id" AS t0_r0, "watchlist_items"."user_id" AS t0_r1, "watchlist_items"."media_item_id" AS t0_r2, "watchlist_items"."status" AS t0_r3, "watchlist_items"."watched_on" AS t0_r4, "watchlist_items"."created_at" AS t0_r5, "watchlist_items"."updated_at" AS t0_r6, "media_items"."id" AS t1_r0, "media_items"."tmdb_id" AS t1_r1, "media_items"."title" AS t1_r2, "media_items"."media_type" AS t1_r3, "media_items"."overview" AS t1_r4, "media_items"."poster_path" AS t1_r5, "media_items"."release_date" AS t1_r6, "media_items"."created_at" AS t1_r7, "media_items"."updated_at" AS t1_r8 FROM "watchlist_items" INNER JOIN "media_items" ON "media_items"."id" = "watchlist_items"."media_item_id" WHERE "watchlist_items"."user_id" = 4 AND "media_items"."media_type" = 'tv' AND "watchlist_items"."status" = 'watched' /*action='tv',application='Mediatrack',controller='media_items'*/[0m
+  ↳ app/controllers/media_items_controller.rb:44:in 'block in MediaItemsController#render_section'
+  [1m[36mWatchlistItem Eager Load (0.3ms)[0m  [1m[34mSELECT "watchlist_items"."id" AS t0_r0, "watchlist_items"."user_id" AS t0_r1, "watchlist_items"."media_item_id" AS t0_r2, "watchlist_items"."status" AS t0_r3, "watchlist_items"."watched_on" AS t0_r4, "watchlist_items"."created_at" AS t0_r5, "watchlist_items"."updated_at" AS t0_r6, "media_items"."id" AS t1_r0, "media_items"."tmdb_id" AS t1_r1, "media_items"."title" AS t1_r2, "media_items"."media_type" AS t1_r3, "media_items"."overview" AS t1_r4, "media_items"."poster_path" AS t1_r5, "media_items"."release_date" AS t1_r6, "media_items"."created_at" AS t1_r7, "media_items"."updated_at" AS t1_r8 FROM "watchlist_items" INNER JOIN "media_items" ON "media_items"."id" = "watchlist_items"."media_item_id" WHERE "watchlist_items"."user_id" = 4 AND "media_items"."media_type" = 'tv' AND "watchlist_items"."status" = 'planned' /*action='tv',application='Mediatrack',controller='media_items'*/[0m
+  ↳ app/controllers/media_items_controller.rb:45:in 'block in MediaItemsController#render_section'
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/section.html.erb within layouts/application
+  Rendered media_items/section.html.erb within layouts/application (Duration: 0.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.5ms | GC: 0.0ms)
+Completed 200 OK in 18ms (Views: 2.0ms | ActiveRecord: 12.7ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/movies" for 127.0.0.1 at 2025-10-23 18:58:04 -0400
+Processing by MediaItemsController#movies as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 4 ORDER BY "users"."id" ASC LIMIT 1 /*action='movies',application='Mediatrack',controller='media_items'*/[0m
+  ↳ app/controllers/media_items_controller.rb:36:in 'MediaItemsController#render_section'
+  [1m[36mWatchlistItem Eager Load (0.4ms)[0m  [1m[34mSELECT "watchlist_items"."id" AS t0_r0, "watchlist_items"."user_id" AS t0_r1, "watchlist_items"."media_item_id" AS t0_r2, "watchlist_items"."status" AS t0_r3, "watchlist_items"."watched_on" AS t0_r4, "watchlist_items"."created_at" AS t0_r5, "watchlist_items"."updated_at" AS t0_r6, "media_items"."id" AS t1_r0, "media_items"."tmdb_id" AS t1_r1, "media_items"."title" AS t1_r2, "media_items"."media_type" AS t1_r3, "media_items"."overview" AS t1_r4, "media_items"."poster_path" AS t1_r5, "media_items"."release_date" AS t1_r6, "media_items"."created_at" AS t1_r7, "media_items"."updated_at" AS t1_r8 FROM "watchlist_items" INNER JOIN "media_items" ON "media_items"."id" = "watchlist_items"."media_item_id" WHERE "watchlist_items"."user_id" = 4 AND "media_items"."media_type" = 'movie' AND "watchlist_items"."status" = 'watched' /*action='movies',application='Mediatrack',controller='media_items'*/[0m
+  ↳ app/controllers/media_items_controller.rb:44:in 'block in MediaItemsController#render_section'
+  [1m[36mWatchlistItem Eager Load (0.3ms)[0m  [1m[34mSELECT "watchlist_items"."id" AS t0_r0, "watchlist_items"."user_id" AS t0_r1, "watchlist_items"."media_item_id" AS t0_r2, "watchlist_items"."status" AS t0_r3, "watchlist_items"."watched_on" AS t0_r4, "watchlist_items"."created_at" AS t0_r5, "watchlist_items"."updated_at" AS t0_r6, "media_items"."id" AS t1_r0, "media_items"."tmdb_id" AS t1_r1, "media_items"."title" AS t1_r2, "media_items"."media_type" AS t1_r3, "media_items"."overview" AS t1_r4, "media_items"."poster_path" AS t1_r5, "media_items"."release_date" AS t1_r6, "media_items"."created_at" AS t1_r7, "media_items"."updated_at" AS t1_r8 FROM "watchlist_items" INNER JOIN "media_items" ON "media_items"."id" = "watchlist_items"."media_item_id" WHERE "watchlist_items"."user_id" = 4 AND "media_items"."media_type" = 'movie' AND "watchlist_items"."status" = 'planned' /*action='movies',application='Mediatrack',controller='media_items'*/[0m
+  ↳ app/controllers/media_items_controller.rb:45:in 'block in MediaItemsController#render_section'
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/section.html.erb within layouts/application
+  Rendered media_items/section.html.erb within layouts/application (Duration: 1.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.1ms | GC: 0.0ms)
+Completed 200 OK in 10ms (Views: 2.6ms | ActiveRecord: 1.0ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/anime" for 127.0.0.1 at 2025-10-23 18:58:27 -0400
+Processing by MediaItemsController#anime as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 4 ORDER BY "users"."id" ASC LIMIT 1 /*action='anime',application='Mediatrack',controller='media_items'*/[0m
+  ↳ app/controllers/media_items_controller.rb:36:in 'MediaItemsController#render_section'
+  [1m[36mWatchlistItem Eager Load (0.4ms)[0m  [1m[34mSELECT "watchlist_items"."id" AS t0_r0, "watchlist_items"."user_id" AS t0_r1, "watchlist_items"."media_item_id" AS t0_r2, "watchlist_items"."status" AS t0_r3, "watchlist_items"."watched_on" AS t0_r4, "watchlist_items"."created_at" AS t0_r5, "watchlist_items"."updated_at" AS t0_r6, "media_items"."id" AS t1_r0, "media_items"."tmdb_id" AS t1_r1, "media_items"."title" AS t1_r2, "media_items"."media_type" AS t1_r3, "media_items"."overview" AS t1_r4, "media_items"."poster_path" AS t1_r5, "media_items"."release_date" AS t1_r6, "media_items"."created_at" AS t1_r7, "media_items"."updated_at" AS t1_r8 FROM "watchlist_items" INNER JOIN "media_items" ON "media_items"."id" = "watchlist_items"."media_item_id" WHERE "watchlist_items"."user_id" = 4 AND "media_items"."media_type" = 'anime' AND "watchlist_items"."status" = 'watched' /*action='anime',application='Mediatrack',controller='media_items'*/[0m
+  ↳ app/controllers/media_items_controller.rb:44:in 'block in MediaItemsController#render_section'
+  [1m[36mWatchlistItem Eager Load (0.2ms)[0m  [1m[34mSELECT "watchlist_items"."id" AS t0_r0, "watchlist_items"."user_id" AS t0_r1, "watchlist_items"."media_item_id" AS t0_r2, "watchlist_items"."status" AS t0_r3, "watchlist_items"."watched_on" AS t0_r4, "watchlist_items"."created_at" AS t0_r5, "watchlist_items"."updated_at" AS t0_r6, "media_items"."id" AS t1_r0, "media_items"."tmdb_id" AS t1_r1, "media_items"."title" AS t1_r2, "media_items"."media_type" AS t1_r3, "media_items"."overview" AS t1_r4, "media_items"."poster_path" AS t1_r5, "media_items"."release_date" AS t1_r6, "media_items"."created_at" AS t1_r7, "media_items"."updated_at" AS t1_r8 FROM "watchlist_items" INNER JOIN "media_items" ON "media_items"."id" = "watchlist_items"."media_item_id" WHERE "watchlist_items"."user_id" = 4 AND "media_items"."media_type" = 'anime' AND "watchlist_items"."status" = 'planned' /*action='anime',application='Mediatrack',controller='media_items'*/[0m
+  ↳ app/controllers/media_items_controller.rb:45:in 'block in MediaItemsController#render_section'
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/section.html.erb within layouts/application
+  Rendered media_items/section.html.erb within layouts/application (Duration: 2.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 3.2ms | GC: 0.0ms)
+Completed 200 OK in 12ms (Views: 3.7ms | ActiveRecord: 1.0ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/movies" for 127.0.0.1 at 2025-10-23 18:58:34 -0400
+Processing by MediaItemsController#movies as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 4 ORDER BY "users"."id" ASC LIMIT 1 /*action='movies',application='Mediatrack',controller='media_items'*/[0m
+  ↳ app/controllers/media_items_controller.rb:36:in 'MediaItemsController#render_section'
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/section.html.erb within layouts/application
+  Rendered media_items/section.html.erb within layouts/application (Duration: 1.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.2ms | GC: 0.0ms)
+Completed 200 OK in 6ms (Views: 2.7ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2025-10-23 18:58:36 -0400
+Processing by MediaItemsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/index.html.erb within layouts/application
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 4 ORDER BY "users"."id" ASC LIMIT 1 /*action='index',application='Mediatrack',controller='media_items'*/[0m
+  ↳ app/views/media_items/index.html.erb:6
+  Rendered media_items/index.html.erb within layouts/application (Duration: 3.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.8ms | GC: 0.0ms)
+Completed 200 OK in 6ms (Views: 5.1ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/users/edit" for 127.0.0.1 at 2025-10-23 18:58:47 -0400
+Processing by Users::RegistrationsController#edit as HTML
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 4 ORDER BY "users"."id" ASC LIMIT 1 /*action='edit',application='Mediatrack',controller='registrations'*/[0m
+  Rendering layout layouts/application.html.erb
+  Rendering devise/registrations/edit.html.erb within layouts/application
+  Rendered devise/registrations/edit.html.erb within layouts/application (Duration: 1.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.6ms | GC: 0.0ms)
+Completed 200 OK in 13ms (Views: 2.1ms | ActiveRecord: 0.4ms (1 query, 0 cached) | GC: 7.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2025-10-23 18:58:49 -0400
+Processing by MediaItemsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering media_items/index.html.erb within layouts/application
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 4 ORDER BY "users"."id" ASC LIMIT 1 /*action='index',application='Mediatrack',controller='media_items'*/[0m
+  ↳ app/views/media_items/index.html.erb:6
+  Rendered media_items/index.html.erb within layouts/application (Duration: 2.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.8ms | GC: 0.0ms)
+Completed 200 OK in 5ms (Views: 2.9ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 1.0ms)
+
+
