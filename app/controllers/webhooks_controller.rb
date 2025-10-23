@@ -35,13 +35,13 @@ class WebhooksController < ApplicationController
   def handle_checkout_completed(session)
     customer_id = session["customer"]
     user = User.find_by(stripe_customer_id: customer_id)
-    user&.update!(subscription_status: "active")
+    user&.update(subscription_status: "active")
   end
 
   def handle_subscription_update(subscription)
     customer_id = subscription["customer"]
     status = subscription["status"]
     user = User.find_by(stripe_customer_id: customer_id)
-    user&.update!(subscription_status: status)
+    user&.update(subscription_status: status)
   end
 end

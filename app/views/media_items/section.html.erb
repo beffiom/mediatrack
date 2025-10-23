@@ -1,10 +1,10 @@
 <section>
-  <h2><%= @media_type %> watchlists</h2>
   <p>
-    <%= link_to "Add new title", search_media_items_path(media_type: (@media_type == "anime" ? "anime" : @media_type)), class: "btn" %>
+    <%= link_to "Add new title", search_media_items_path(media_type: (@media_type == "anime" ? "anime" : @media_type), source: @media_type), class: "btn" %>
   </p>
+  <h2><%= @media_type == "movie" ? "movies" : @media_type == "tv" ? "tv shows" : "anime" %></h2>
 
-  <h3>want to watch</h3>
+  <h3>planned</h3>
   <div class="grid">
     <% @planned.each do |item| %>
       <% m = item.media_item %>
@@ -12,14 +12,11 @@
         <% if m.poster_path.present? %>
           <img src="https://image.tmdb.org/t/p/w200<%= m.poster_path %>" alt="<%= m.title %>">
         <% end %>
-        <div class="title"><%= m.title %> <% if m.release_date %>(<%= m.release_date.year %>)<% end %></div>
-        <div class="muted">planned</div>
-        <div>
-          <%= form_with url: watchlist_item_path(item), method: :patch, local: true, class: "inline" do |f| %>
-            <%= f.hidden_field :status, value: "watched" %>
-            <%= f.date_field :watched_on, value: Date.today %>
-            <%= f.submit "mark watched", class: "btn" %>
-          <% end %>
+        <div class="title"><%= m.title %></div>
+        <% if m.release_date %><div class="card-date"><%= m.release_date.year %></div><% end %>
+        <div class="card-actions">
+          <%= button_to "mark watched", watchlist_item_path(item), method: :patch, class: "btn",
+                params: { status: "watched", watched_on: Date.today } %>
           <%= button_to "remove", watchlist_item_path(item), method: :delete, class: "btn" %>
         </div>
       </div>
@@ -34,17 +31,11 @@
         <% if m.poster_path.present? %>
           <img src="https://image.tmdb.org/t/p/w200<%= m.poster_path %>" alt="<%= m.title %>">
         <% end %>
-        <div class="title"><%= m.title %> <% if m.release_date %>(<%= m.release_date.year %>)<% end %></div>
-        <div class="muted">watched <%= item.watched_on&.strftime("%Y-%m-%d") %></div>
-        <div>
-          <%= form_with url: watchlist_item_path(item), method: :patch, local: true, class: "inline" do |f| %>
-            <%= f.hidden_field :status, value: "planned" %>
-            <%= f.submit "move to planned", class: "btn" %>
-          <% end %>
-          <%= form_with url: watchlist_item_path(item), method: :patch, local: true, class: "inline" do |f| %>
-            <%= f.date_field :watched_on, value: item.watched_on %>
-            <%= f.submit "update date", class: "btn" %>
-          <% end %>
+        <div class="title"><%= m.title %></div>
+        <% if m.release_date %><div class="card-date"><%= m.release_date.year %></div><% end %>
+        <div class="card-actions">
+          <%= button_to "move to planned", watchlist_item_path(item), method: :patch, class: "btn",
+                params: { status: "planned" } %>
           <%= button_to "remove", watchlist_item_path(item), method: :delete, class: "btn" %>
         </div>
       </div>

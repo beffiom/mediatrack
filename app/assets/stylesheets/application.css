@@ -17,11 +17,16 @@
 .flash { padding: 0.5rem 0.75rem; border: 1px solid var(--terminal-green); background: var(--terminal-dim); margin: 1rem 0; }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
-.card { border: 1px solid var(--terminal-green); padding: 0.5rem; background: var(--terminal-dim); }
+.card { border: 1px solid var(--terminal-green); padding: 0.5rem; background: var(--terminal-dim); display: flex; flex-direction: column; min-height: 400px; }
 .card img { width: 100%; height: auto; display: block; }
-.card .title { font-weight: bold; margin-top: 0.5rem; }
+.card .title { font-weight: bold; margin-top: 0.5rem; margin-bottom: 0; flex-grow: 1; word-break: break-word; overflow-wrap: break-word; }
+.card-date { text-align: right; font-size: 0.9rem; opacity: 0.8; margin-bottom: 0.5rem; }
+.card-actions { display: flex; flex-direction: column; gap: 0.5rem; margin-top: auto; }
+.card-actions form { width: 100%; }
+.card-actions .btn { width: 100%; text-align: center; box-sizing: border-box; }
+.card-actions .date-input { width: 100%; margin-bottom: 0.25rem; box-sizing: border-box; }
 .muted { opacity: 0.8; }
-.btn { display: inline-block; color: var(--terminal-green); border: 1px solid var(--terminal-green); padding: 0.25rem 0.5rem; text-decoration: none; background: transparent; }
+.btn { display: inline-block; color: var(--terminal-green); border: 1px solid var(--terminal-green); padding: 0.25rem 0.5rem; text-decoration: none; background: transparent; cursor: pointer; }
 
 form.inline { display: inline-flex; gap: 0.5rem; align-items: center; }
 input, select { background: #000; color: var(--terminal-green); border: 1px solid var(--terminal-green); padding: 0.25rem; }
@@ -31,3 +36,97 @@ input, select { background: #000; color: var(--terminal-green); border: 1px soli
 
 /* enforce lowercase ui text */
 h1, h2, h3, .nav-link, .btn, label, .flash, .brand-link { text-transform: lowercase; }
+
+/* Auth forms */
+.field { margin-bottom: 1.5rem; }
+.field label { display: block; margin-bottom: 0.5rem; }
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="password"] { 
+  width: 100%; 
+  max-width: 400px;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.checkbox-field { display: flex; align-items: center; gap: 0.5rem; }
+.checkbox-field label { margin-bottom: 0; }
+.checkbox-field input[type="checkbox"] {
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 1px solid var(--terminal-green);
+  background-color: var(--terminal-bg);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+}
+.checkbox-field input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--terminal-green);
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.actions { margin-top: 2rem; }
+
+.auth-submit-btn {
+  padding: 0.75rem 1rem;
+  background-color: var(--terminal-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  max-width: 400px;
+  display: block;
+  font-size: 1rem;
+}
+
+.auth-submit-btn:hover {
+  background-color: var(--terminal-green);
+  color: var(--terminal-bg);
+}
+
+.field em {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Auth links */
+.auth-links { 
+  margin-top: 2rem; 
+  padding-top: 2rem; 
+  border-top: 1px solid var(--terminal-green);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 400px;
+}
+
+.auth-link-btn {
+  display: inline-block;
+  padding: 0.75rem 1rem;
+  background-color: var(--terminal-dim);
+  color: var(--terminal-green);
+  border: 1px solid var(--terminal-green);
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: pointer;
+  text-transform: lowercase;
+}
+
+.auth-link-btn:hover {
+  background-color: var(--terminal-green);
+  color: var(--terminal-bg);
+}
+
+.auth-link-btn.secondary {
+  opacity: 0.7;
+  font-size: 0.9rem;
+}

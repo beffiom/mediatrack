@@ -24,32 +24,49 @@
   </head>
 
   <body class="terminal-bg terminal-text">
-    <header class="container nav">
-      <div class="brand"><%= link_to "mediatrack", root_path, class: "brand-link" %></div>
-      <nav>
-        <%= link_to "movies", movies_path, class: "nav-link" %>
-        <%= link_to "tv shows", tv_path, class: "nav-link" %>
-        <%= link_to "anime", anime_path, class: "nav-link" %>
-        <%= link_to "search", search_media_items_path, class: "nav-link" %>
-        <% if user_signed_in? %>
-          <span class="nav-link">hi, <%= current_user.email %></span>
-          <%= link_to "profile", edit_user_registration_path, class: "nav-link" %>
-          <%= button_to "sign out", destroy_user_session_path, method: :delete, class: "nav-link btn-link" %>
-        <% else %>
-          <%= link_to "sign in", new_user_session_path, class: "nav-link" %>
-          <%= link_to "sign up", new_user_registration_path, class: "nav-link" %>
-        <% end %>
-      </nav>
-    </header>
+    <% if user_signed_in? %>
+      <header class="container nav">
+        <div class="brand"><%= link_to "mediatrack", root_path, class: "brand-link" %></div>
+        <nav>
+          <%= link_to "movies", movies_path, class: "nav-link" %>
+          <%= link_to "tv shows", tv_path, class: "nav-link" %>
+          <%= link_to "anime", anime_path, class: "nav-link" %>
+          <%= link_to "search", search_media_items_path, class: "nav-link" %>
+          <%= link_to "settings", edit_user_registration_path, class: "nav-link" %>
+        </nav>
+      </header>
+    <% end %>
 
     <main class="container">
       <% if notice %>
-        <p class="flash notice"><%= notice %></p>
+        <p class="flash notice" id="flash-notice"><%= notice %></p>
       <% end %>
       <% if alert %>
-        <p class="flash alert"><%= alert %></p>
+        <p class="flash alert" id="flash-alert"><%= alert %></p>
       <% end %>
       <%= yield %>
     </main>
+    
+    <script>
+      // Auto-dismiss flash messages after 5 seconds
+      const flashNotice = document.getElementById('flash-notice');
+      const flashAlert = document.getElementById('flash-alert');
+      
+      if (flashNotice) {
+        setTimeout(() => {
+          flashNotice.style.transition = 'opacity 0.5s';
+          flashNotice.style.opacity = '0';
+          setTimeout(() => flashNotice.remove(), 500);
+        }, 5000);
+      }
+      
+      if (flashAlert) {
+        setTimeout(() => {
+          flashAlert.style.transition = 'opacity 0.5s';
+          flashAlert.style.opacity = '0';
+          setTimeout(() => flashAlert.remove(), 500);
+        }, 5000);
+      }
+    </script>
   </body>
 </html>

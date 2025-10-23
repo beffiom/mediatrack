@@ -1,24 +1,34 @@
 <section>
   <h2>search tmdb</h2>
+  <% if @api_key_error %>
+    <p class="flash alert">TMDB API key not yet set, <%= link_to "click here", edit_user_registration_path %> to set it</p>
+  <% end %>
   <%= form_with url: search_media_items_path, method: :get, local: true, class: "inline" do |f| %>
     <%= f.label :q, "query" %>
     <%= f.text_field :q, value: params[:q] %>
     <%= f.label :media_type, "type" %>
     <%= f.select :media_type, options_for_select([["any",""],["movies","movie"],["tv","tv"],["anime","anime"]], params[:media_type]) %>
+    <% if params[:source].present? %>
+      <%= f.hidden_field :source, value: params[:source] %>
+    <% end %>
     <%= f.submit "search", class: "btn" %>
   <% end %>
 
   <% if @results.present? %>
-    <div class="grid">
+    <div class="grid" style="margin-top: 2rem;">
       <% @results.each do |r| %>
         <div class="card">
           <% if r[:poster_path].present? %>
             <img src="https://image.tmdb.org/t/p/w200<%= r[:poster_path] %>" alt="<%= r[:title] %>">
           <% end %>
-          <div class="title"><%= r[:title] %> <% if r[:release_date].present? %>(<%= r[:release_date].to_s[0,4] %>)<% end %></div>
-          <div class="muted"><%= r[:media_type] %></div>
-          <%= button_to "add to watchlist", watchlist_items_path, method: :post, class: "btn",
-                params: { tmdb_id: r[:tmdb_id], title: r[:title], media_type: r[:media_type], poster_path: r[:poster_path], release_date: r[:release_date], status: "planned" } %>
+          <div class="title"><%= r[:title] %></div>
+          <% if r[:release_date].present? %><div class="card-date"><%= r[:release_date].to_s[0,4] %></div><% end %>
+          <div class="card-actions">
+            <%= button_to "planned", watchlist_items_path, method: :post, class: "btn",
+                  params: { tmdb_id: r[:tmdb_id], title: r[:title], media_type: (params[:source].presence || r[:media_type]), poster_path: r[:poster_path], release_date: r[:release_date], status: "planned" } %>
+            <%= button_to "watched", watchlist_items_path, method: :post, class: "btn",
+                  params: { tmdb_id: r[:tmdb_id], title: r[:title], media_type: (params[:source].presence || r[:media_type]), poster_path: r[:poster_path], release_date: r[:release_date], status: "watched", watched_on: Date.today } %>
+          </div>
         </div>
       <% end %>
     </div>

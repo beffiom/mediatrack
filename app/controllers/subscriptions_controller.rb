@@ -11,17 +11,23 @@ class SubscriptionsController < ApplicationController
       return
     end
 
-    ensure_stripe_customer!
+    begin
+      ensure_stripe_customer!
 
-    session = Stripe::Checkout::Session.create(
-      mode: "subscription",
-      customer: current_user.stripe_customer_id,
-      line_items: [{ price: price_id, quantity: 1 }],
-      success_url: root_url + "?checkout=success",
-      cancel_url: root_url + "?checkout=cancel"
-    )
+      session = Stripe::Checkout::Session.create(
+        mode: "subscription",
+        customer: current_user.stripe_customer_id,
+        line_items: [{ price: price_id, quantity: 1 }],
+        success_url: root_url + "?checkout=success",
+        cancel_url: root_url + "?checkout=cancel"
+      )
 
-    redirect_to session.url, allow_other_host: true
+      redirect_to session.url, allow_other_host: true
+    rescue Stripe::StripeError => e
+      redirect_to root_path, alert: "stripe error: #{e.message}"
+    rescue => _e
+      redirect_to root_path, alert: "unexpected error starting checkout"
+    end
   end
 
   def destroy
@@ -36,5 +42,9 @@ class SubscriptionsController < ApplicationController
 
     customer = Stripe::Customer.create(email: current_user.email)
     current_user.update!(stripe_customer_id: customer.id)
+  rescue Stripe::StripeError
+    raise
+  rescue => _e
+    raise
   end
 end

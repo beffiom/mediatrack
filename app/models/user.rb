@@ -7,6 +7,17 @@ class User < ApplicationRecord
   has_many :watchlist_items, dependent: :destroy
   has_many :media_items, through: :watchlist_items
 
+  validates :username, presence: true, uniqueness: { case_sensitive: false }
+  
+  # Override Devise's email validation to make it optional
+  def email_required?
+    false
+  end
+
+  def email_changed?
+    false
+  end
+
   # Validate TMDB key when changed and present
   validate :validate_tmdb_api_key, if: :will_validate_tmdb_api_key?
 
@@ -25,6 +36,14 @@ class User < ApplicationRecord
     client = Tmdb::Client.new(api_key: tmdb_api_key)
     unless client.valid_key?
       errors.add(:tmdb_api_key, "invalid api key")
+    end
+  rescue Tmdb::MissingKey
+    errors.add(:tmdb_api_key, "invalid api key")
+  rescue Tmdb::HttpError => e
+    if e.status == 401
+      errors.add(:tmdb_api_key, "invalid api key")
+    else
+      errors.add(:tmdb_api_key, "could not verify api key")
     end
   rescue => _e
     errors.add(:tmdb_api_key, "could not verify api key")

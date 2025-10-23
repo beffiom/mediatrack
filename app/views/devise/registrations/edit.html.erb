@@ -1,53 +1,182 @@
-<h2>edit <%= resource_name.to_s.humanize.downcase %></h2>
-
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+<section>
+  <h2><%= current_user.username %></h2>
 
   <div class="field">
-    <%= f.label :email, "email" %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :tmdb_api_key, "tmdb api key" %><br />
-    <%= f.text_field :tmdb_api_key, autocomplete: "off" %>
-    <% if resource.errors[:tmdb_api_key].present? %>
-      <span class="icon-x">✖ invalid api key</span>
-    <% elsif resource.tmdb_api_key.present? %>
-      <span class="icon-check">✔</span>
+    <%= form_with url: update_api_key_settings_path, method: :patch, local: true do |f| %>
+      <%= label_tag :tmdb_api_key, "tmdb api key" %>
+      <div class="api-key-input-wrapper">
+        <%= text_field_tag :tmdb_api_key, current_user.tmdb_api_key, autocomplete: "off", class: "api-key-input" %>
+        <%= submit_tag "set", class: "btn" %>
+      </div>
+      <% if @api_key_error %>
+        <div class="api-key-error">
+          <span class="icon-x">✖</span> <%= @api_key_error %>
+        </div>
+      <% elsif current_user.tmdb_api_key.present? && !@api_key_error %>
+        <div class="api-key-success">
+          <span class="icon-check">✔</span>
+        </div>
+      <% end %>
     <% end %>
   </div>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
+  <div class="settings-actions">
+    <%= link_to "update password", edit_password_settings_path, class: "btn btn-action" %>
+    <%= button_to "sign out", destroy_user_session_path, method: :delete, class: "btn btn-action" %>
+    <button type="button" class="btn btn-action btn-danger" onclick="openDeleteModal()">delete account</button>
+  </div>
+</section>
 
-  <div class="field">
-    <%= f.label :password, "password" %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-    <% if @minimum_password_length %>
-      <br />
-      <em><%= @minimum_password_length %> characters minimum</em>
+<!-- Delete Account Modal -->
+<div id="deleteModal" class="modal" style="display: <%= flash[:alert] == 'incorrect password' ? 'flex' : 'none' %>;">
+  <div class="modal-content">
+    <h3>delete account</h3>
+    <p>are you sure?</p>
+    <% if flash[:alert] == 'incorrect password' %>
+      <p class="modal-error">incorrect password</p>
+    <% end %>
+    <%= form_with url: registration_path(resource_name), method: :delete, local: true do |f| %>
+      <div class="field">
+        <%= label_tag :current_password, "enter password" %>
+        <%= password_field_tag :current_password, nil, autocomplete: "current-password", required: true %>
+      </div>
+      <div class="modal-actions">
+        <%= submit_tag "confirm", class: "btn btn-action btn-danger" %>
+        <button type="button" class="btn btn-action" onclick="closeDeleteModal()">cancel</button>
+      </div>
     <% end %>
   </div>
+</div>
 
-  <div class="field">
-    <%= f.label :password_confirmation, "confirm password" %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
+<script>
+function openDeleteModal() {
+  document.getElementById('deleteModal').style.display = 'flex';
+}
 
-  <div class="field">
-    <%= f.label :current_password, "current password" %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
-  </div>
+function closeDeleteModal() {
+  document.getElementById('deleteModal').style.display = 'none';
+}
 
-  <div class="actions">
-    <%= f.submit "update", class: "btn" %>
-  </div>
-<% end %>
+// Close modal when clicking outside
+window.onclick = function(event) {
+  const modal = document.getElementById('deleteModal');
+  if (event.target == modal) {
+    closeDeleteModal();
+  }
+}
+</script>
 
-<h3>cancel my account</h3>
+<style>
+.settings-actions {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  max-width: 300px;
+}
 
-<div>unhappy? <%= button_to "cancel my account", registration_path(resource_name), data: { confirm: "are you sure?", turbo_confirm: "are you sure?" }, method: :delete %></div>
+.btn-action {
+  padding: 1rem;
+  text-align: center;
+  background-color: black;
+  color: #00ff7f;
+  border: 2px solid #00ff7f;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  font-weight: bold;
+  transition: all 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 1rem;
+  font-family: inherit;
+}
 
-<%= link_to "back", :back %>
+.btn-action:hover {
+  background-color: #00ff7f;
+  color: white;
+}
+
+.btn-danger {
+  color: #ff0000;
+  border-color: #ff0000;
+}
+
+.btn-danger:hover {
+  background-color: #ff0000;
+  color: white;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: black;
+  border: 2px solid #00ff7f;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  color: #00ff7f;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.modal-actions .btn-action {
+  flex: 1;
+}
+
+.icon-check {
+  color: #00ff7f;
+}
+
+.api-key-input-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.api-key-input {
+  flex: 1;
+}
+
+.api-key-error {
+  margin-top: 0.5rem;
+  color: #ff0000;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.api-key-success {
+  margin-top: 0.5rem;
+  color: #00ff7f;
+}
+
+.modal-error {
+  color: #ff0000;
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid #ff0000;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+</style>
